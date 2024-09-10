@@ -20,6 +20,15 @@ pipeline {
                 }
             }
         }
+        stage('Cleanup') {
+            steps {
+                script {
+                    sh 'docker stop my-nodejs-app || true'
+                    sh 'docker rm my-nodejs-app || true'
+                    sh 'docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG} || true'
+                }
+            }
+        }
 
         stage('Run Docker Container') {
             steps {
@@ -38,15 +47,7 @@ pipeline {
             }
         }
 
-        stage('Cleanup') {
-            steps {
-                script {
-                    sh 'docker stop my-nodejs-app || true'
-                    sh 'docker rm my-nodejs-app || true'
-                    sh 'docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG} || true'
-                }
-            }
-        }
+        
     }
 
     post {
