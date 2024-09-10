@@ -1,42 +1,37 @@
 pipeline {
     agent any
-
+    
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/zeeshanfaizan/hello-world-nodejs.git'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build('hello-world-nodejs')
+                    docker.build('my-image')
                 }
             }
         }
-
         stage('Run Docker Container') {
             steps {
                 script {
-                    docker.image('hello-world-nodejs').run('-p 3000:3000')
+                    docker.image('my-image').run('-d -p 8080:80')
                 }
             }
         }
-
         stage('Test Application') {
             steps {
                 script {
-                    // Check if the app is running by testing the response from localhost
-                    sh 'curl http://localhost:3000'
+                    sh 'curl http://localhost:8080'
                 }
             }
         }
-
         stage('Cleanup') {
             steps {
                 script {
-                    sh 'docker ps -a | grep hello-world-nodejs | awk \'{print $1}\' | xargs docker rm -f'
+                    docker.image('my-image').remove()
                 }
             }
         }
