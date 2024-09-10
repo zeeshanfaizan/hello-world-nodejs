@@ -25,7 +25,7 @@ pipeline {
                 script {
                     sh 'docker stop my-nodejs-app || true'
                     sh 'docker rm my-nodejs-app || true'
-                    sh 'docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG} || true'
+                    // sh 'docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG} || true'
                 }
             }
         }
