@@ -1,1 +1,62 @@
+pipeline {
+    agent any
 
+    tools {
+        maven 'Maven_3.6'  // Refers to the Maven version configured in Jenkins
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from the source control (e.g., GitHub, GitLab, etc.)
+                git 'https://github.com/zeeshanfaizan/hello-world-nodejs/edit/main/maven%20application/Jenkinsfile'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Compile the project using Maven
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run unit tests
+                sh 'mvn test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                // Package the application
+                sh 'mvn package'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Deploy the artifact to a specific environment (e.g., to a server, Docker container, etc.)
+                // This is an optional stage and depends on your setup
+                sh 'mvn deploy'
+            }
+        }
+    }
+
+    post {
+        always {
+            // Optional: Clean up the workspace after build
+            cleanWs()
+        }
+
+        success {
+            // Notify upon success
+            echo 'Build completed successfully!'
+        }
+
+        failure {
+            // Notify upon failure
+            echo 'Build failed!'
+        }
+    }
+}
